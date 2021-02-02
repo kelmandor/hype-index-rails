@@ -62,5 +62,5 @@ Rails.application.configure do
 
   NEWSPAPER_HOST = 'http://localhost:8888'
 
-  config.active_storage.service = :amazon
+  config.active_storage.service = :amazon_dev
 end
