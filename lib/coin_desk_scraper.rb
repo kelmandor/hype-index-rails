@@ -1,10 +1,13 @@
 module CoinDeskScraper
   def self.scrape(text_source)
     page = Scrape.raw(text_source.url)
-    sitemaps = page.css('sitemap')[0..5].map do |row|
+    sitemaps = page.css('sitemap').map do |row|
     # sitemaps = page.css('sitemap')[0..2].map do |row|
       url = row.css('loc').text
-      if url =~ /post-sitemap/
+      dt = DateTime.parse(row.css('lastmod').text)
+      date_min = DateTime.parse('2020-02-01')
+      if (url =~ /post-sitemap/) && (dt > date_min)
+      # if url =~ /post-sitemap/
         doc = Scrape.raw(url)
         links = doc.css('loc').map do |link|
           link.text
@@ -19,16 +22,12 @@ module CoinDeskScraper
     end
   end
 
-  def self.scrape_article(carticle)
-    newspaper_response = Nlp.extract_text(carticle.url)
-    ss = newspaper_response['sentences']
-    ss.each.with_index do |sss, i|
-      res = carticle.crypto_sentences.find_or_create_by(
-        content: sss,
-        position: i
-      )
-      # puts res.errors.inspect
-    end
+  def self.scrape_time(page)
 
+    DateTime.parse(page.css('time').first.text)
+  end
+
+  def self.scrape_headline(page)
+    page.css('h1').text
   end
 end

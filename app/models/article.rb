@@ -1,15 +1,23 @@
 class Article < ApplicationRecord
   belongs_to :text_source
+  belongs_to :time_object, optional: true
   has_one_attached :content
   has_one_attached :html
 
-  after_create :scrape
+  has_many :article_assets, dependent: :destroy
+  has_many :assets, through: :article_assets
+
+  # after_create :scrape_and_match
 
   def scrape
-    if !self.html.attached? || !self.content.attached?
-      data = Nlp.extract_text(self.url)
-      store_content(data)
-      store_html(data)
+    begin
+      if !self.html.attached? || !self.content.attached?
+        data = Nlp.extract_text(self.url)
+        store_content(data)
+        store_html(data)
+      end
+    rescue
+      puts '$$$$$$$$$$$$$ BAD SCRAPE $$$$$$$$$$$$$'
     end
   end
 
@@ -42,5 +50,53 @@ class Article < ApplicationRecord
     else
       puts 'no content attached :('
     end
+  end
+
+  def match_assets
+    txt = self.content.download
+    aa = Asset.all
+    aa.each do |a|
+      if txt =~ / #{a.symbol} / || txt =~ / #{a.name} /
+        self.assets << a unless self.assets.include?(a)
+      end
+    end
+  end
+
+  def self.scrape_and_match
+    all.each do |a|
+      a.scrape_and_match
+    end
+  end
+
+  def scrape_and_match
+    self.scrape
+    while !self.content.attached?
+      sleep 2
+    end
+
+    self.match_assets rescue puts "@@@@@@@@ match failed article id #{self.id}"
+  end
+
+  def scrape_time(to_save = false)
+    page = Nokogiri::HTML(self.html.download)
+    tm = self.text_source.scraper_object.scrape_time(page)
+    to = TimeObject.time_to_object(tm)
+    self.time_object = to
+    self.save! if to_save
+    self.time_object
+  end
+
+  def scrape_headline(to_save = false)
+    page = Nokogiri::HTML(self.html.download)
+    self.headline = self.text_source.scraper_object.scrape_headline(page)
+    self.save! if to_save
+    self.headline
+  end
+
+  def scrape_and_save
+    self.match_assets
+    self.scrape_time
+    self.scrape_headline
+    self.save!
   end
 end

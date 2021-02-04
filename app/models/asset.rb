@@ -2,6 +2,9 @@ class Asset < ApplicationRecord
   belongs_to :data_source
   has_many :data_points
 
+  has_many :article_assets, dependent: :destroy
+  has_many :articles, through: :article_assets
+
   def get_cmc_id
     page = Scrape.raw(self.url)
     page.css('img').first.attr('src').split('/').last.split('.').first

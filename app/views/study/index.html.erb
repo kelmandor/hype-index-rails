@@ -1,0 +1,12 @@
+<table>
+  <th>asset symbol</th>
+  <th>asset name</th>
+  <th>article content</th>
+  <% @aa.each do |a| %>
+  <tr>
+    <td><%= a.asset.symbol %></td>
+    <td><%= a.asset.name %></td>
+    <td><%= url_for(a.article.content) %></td>
+  </tr>
+  <% end %>
+</table>
