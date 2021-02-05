@@ -25,7 +25,8 @@ development:
   <<: *default
   database: hype_index_rails_development
   username: postgres
-  password: yohoho
+  # password: yohoho
+  password: q3Dw9pM01j # GKE helm install
   host: localhost
   port: 5432
 

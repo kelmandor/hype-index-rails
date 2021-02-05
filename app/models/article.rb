@@ -52,13 +52,20 @@ class Article < ApplicationRecord
     end
   end
 
-  def match_assets
+  def match_assets(to_save = false)
     txt = self.content.download
     aa = Asset.all
-    aa.each do |a|
-      if txt =~ / #{a.symbol} / || txt =~ / #{a.name} /
-        self.assets << a unless self.assets.include?(a)
-      end
+
+    hsh = aa.map{|a| [[a.name, a],[a.symbol, a]]}.flatten(1).to_h
+
+    combined = aa.pluck(:name, :symbol).flatten.map{|a| a.gsub(/[^0-9a-z ]/i, '')}.join('|')
+    matched = txt.scan(/(#{combined})/).flatten.uniq
+    matched.each do |a|
+      ass = hsh[a]
+      puts "ARTICLE #{self.id} MATCHES #{a}"
+      self.assets << ass unless self.assets.include?(ass)
+      self.scanned_for_assets = true
+      self.save! if to_save
     end
   end
 
@@ -78,12 +85,16 @@ class Article < ApplicationRecord
   end
 
   def scrape_time(to_save = false)
-    page = Nokogiri::HTML(self.html.download)
-    tm = self.text_source.scraper_object.scrape_time(page)
-    to = TimeObject.time_to_object(tm)
-    self.time_object = to
-    self.save! if to_save
-    self.time_object
+    begin
+      page = Nokogiri::HTML(self.html.download)
+      tm = self.text_source.scraper_object.scrape_time(page)
+      to = TimeObject.time_to_object(tm)
+      self.time_object = to
+      self.save! if to_save
+      self.time_object
+    rescue
+      puts "scrapetime failed article id: #{self.id}"
+    end
   end
 
   def scrape_headline(to_save = false)

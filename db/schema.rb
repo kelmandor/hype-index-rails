@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_03_120415) do
+ActiveRecord::Schema.define(version: 2021_02_04_143107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2021_02_03_120415) do
     t.text "headline"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "scanned_for_assets", default: false
     t.index ["text_source_id"], name: "index_articles_on_text_source_id"
     t.index ["time_object_id"], name: "index_articles_on_time_object_id"
   end
