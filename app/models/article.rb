@@ -64,9 +64,9 @@ class Article < ApplicationRecord
       ass = hsh[a]
       puts "ARTICLE #{self.id} MATCHES #{a}"
       self.assets << ass unless self.assets.include?(ass)
-      self.scanned_for_assets = true
-      self.save! if to_save
     end
+    self.scanned_for_assets = true
+    self.save! if to_save
   end
 
   def self.scrape_and_match

@@ -76,8 +76,6 @@ GEM
     aws-sigv4 (1.2.2)
       aws-eventstream (~> 1, >= 1.0.2)
     bindex (0.8.1)
-    bootsnap (1.5.1)
-      msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
     capybara (3.35.1)
@@ -121,7 +119,6 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
     minitest (5.14.3)
-    msgpack (1.4.0)
     multi_xml (0.6.0)
     nio4r (2.5.4)
     nokogiri (1.11.1)
@@ -229,7 +226,6 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   aws-sdk-s3
-  bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
   httparty
