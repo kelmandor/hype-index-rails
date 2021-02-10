@@ -58,3 +58,5 @@ gem 'httparty'
 gem "aws-sdk-s3", require: false
 # gem 'aws-sdk'
 gem 'rack-cors', require: 'rack/cors'
+
+gem 'sidekiq'
