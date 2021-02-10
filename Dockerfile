@@ -35,7 +35,8 @@ ENV APP_HOME /workdir
 RUN mkdir ${APP_HOME}
 WORKDIR ${APP_HOME}
 
-ENV RAILS_ENV production
+# ENV RAILS_ENV production
+ENV RAILS_ENV development
 ENV RAILS_MASTER_KEY 2ba0ab62bdc62514afe6661c6642fd62
 
 # Copy the Gemfile
