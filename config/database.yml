@@ -61,7 +61,14 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
+  # <<: *default
+  # database: hype_index_rails_production
+  # username: hype_index_rails
+  # password: <%= ENV['HYPE_INDEX_RAILS_DATABASE_PASSWORD'] %>
   <<: *default
-  database: hype_index_rails_production
-  username: hype_index_rails
-  password: <%= ENV['HYPE_INDEX_RAILS_DATABASE_PASSWORD'] %>
+  database: hype_index_rails_development
+  username: postgres
+  # password: yohoho
+  password: q3Dw9pM01j # GKE helm install
+  host: postgres-postgresql.default.svc.cluster.local
+  port: 5432
