@@ -110,4 +110,8 @@ class Article < ApplicationRecord
     self.scrape_headline
     self.save!
   end
+
+  def self.agg_asset_mentions
+    'doriscool'
+  end
 end
