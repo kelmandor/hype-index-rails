@@ -23,14 +23,10 @@ class Asset < ApplicationRecord
     json = `curl '#{self.data_url}'`
     data = JSON.parse(json)
     data['data']['quotes'].each do |dd|
-      time_open = DateTime.parse(dd['time_open'])
-      ts = time_open.to_i
-      obj = {
-        datetime: time_open,
-        timestamp: ts
-      }
-      to = TimeObject.find_or_create_by(obj)
-      self.data_points.build({
+      tm = DateTime.parse(dd['time_open'])
+      to = TimeObject.time_to_object(tm)
+
+      self.data_points.find_or_initialize_by({
         time_object: to,
         open: dd['quote']['USD']['open'],
         close: dd['quote']['USD']['close'],
@@ -41,5 +37,11 @@ class Asset < ApplicationRecord
       })
     end
     self.save
+  end
+
+  def self.fetch_all_historical
+    all.each do |ass|
+      GetAssetHistoricalDataWorker.perform_async(ass.id)
+    end
   end
 end
