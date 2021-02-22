@@ -77,7 +77,7 @@ class Article < ApplicationRecord
 
   def scrape_and_match
     self.scrape
-    while !self.content.attached?
+    while !self.content.attached? # i dont think this really works
       sleep 2
     end
 

@@ -24,3 +24,33 @@ tss = [{
 tss.each do |ts|
   TextSource.find_or_create_by(ts)
 end
+
+
+# migrate all time_objects to the time fields in
+# articles:
+aa = Article.all.includes(:time_object)
+aa.each{|a| MigrateTimeToArticleWorker.perform_async(a.id)}
+# res = aa.map do |a|
+#   begin
+#     a.datetime = a.time_object.datetime
+#     a.timestamp = a.time_object.timestamp
+#     a.save
+#   rescue
+#     nil
+#   end
+# end
+
+# migrate all time_objects to the time fields in
+# data_points:
+dps = DataPoint.all.includes(:time_object)
+dps.each{|dp| MigrateTimeToDatePointWorker.perform_async(dp.id)}
+# res = dps.map do |dp|
+#   begin
+#     dp.datetime = dp.time_object.datetime
+#     dp.timestamp = dp.time_object.timestamp
+#     dp.save
+#   rescue
+#     nil
+#   end
+# end
+

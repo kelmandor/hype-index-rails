@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_17_123153) do
+ActiveRecord::Schema.define(version: 2021_02_22_212353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 2021_02_17_123153) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "scanned_for_assets", default: false
+    t.datetime "datetime"
+    t.integer "timestamp"
     t.index ["text_source_id"], name: "index_articles_on_text_source_id"
     t.index ["time_object_id"], name: "index_articles_on_time_object_id"
   end
@@ -79,6 +81,8 @@ ActiveRecord::Schema.define(version: 2021_02_17_123153) do
     t.bigint "market_cap"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "datetime"
+    t.integer "timestamp"
     t.index ["asset_id"], name: "index_data_points_on_asset_id"
     t.index ["time_object_id"], name: "index_data_points_on_time_object_id"
   end

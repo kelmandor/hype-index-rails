@@ -61,3 +61,4 @@ gem 'rack-cors', require: 'rack/cors'
 
 gem 'sidekiq'
 gem 'rabl'
+gem 'pry-rails'
