@@ -42,7 +42,8 @@ aa.each{|a| MigrateTimeToArticleWorker.perform_async(a.id)}
 
 # migrate all time_objects to the time fields in
 # data_points:
-dps = DataPoint.all.includes(:time_object)
+# dps = DataPoint.all.includes(:time_object)
+dps = DataPoint.where(datetime: nil)
 dps.each{|dp| MigrateTimeToDatePointWorker.perform_async(dp.id)}
 # res = dps.map do |dp|
 #   begin

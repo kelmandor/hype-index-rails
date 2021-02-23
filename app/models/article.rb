@@ -115,4 +115,13 @@ class Article < ApplicationRecord
   def self.agg_asset_mentions
     'doriscool'
   end
+
+  def by_date
+    datetime.to_date.to_s(:db)
+  end
+
+  def by_week
+    datetime.beginning_of_week.to_date.to_s(:db)
+  end
+
 end
