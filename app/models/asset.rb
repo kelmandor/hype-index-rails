@@ -62,7 +62,7 @@ class Asset < ApplicationRecord
     aa.each do |dt, as|
       data[dt] = {
         num_of_articles: as.size,
-        month_start: dt,
+        month_start: dt
       }
     end
 
@@ -73,12 +73,13 @@ class Asset < ApplicationRecord
         data[dt] = {
           open: dpp.first.open,
           num_of_articles: 0,
+          month_start: dt
         }
       end
     end
 
     res = []
-    data.each do |dt, obj|
+    data.sort.each do |dt, obj|
       res << {
         month_start: dt,
         num_of_articles: obj[:num_of_articles],
