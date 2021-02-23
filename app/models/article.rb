@@ -88,8 +88,9 @@ class Article < ApplicationRecord
     begin
       page = Nokogiri::HTML(self.html.download)
       tm = self.text_source.scraper_object.scrape_time(page)
-      to = TimeObject.time_to_object(tm)
-      self.time_object = to
+      ts = tm.to_i
+      self.datetime = tm
+      self.timestamp = ts
       self.save! if to_save
       self.time_object
     rescue

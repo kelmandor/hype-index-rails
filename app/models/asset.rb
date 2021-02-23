@@ -24,10 +24,11 @@ class Asset < ApplicationRecord
     data = JSON.parse(json)
     data['data']['quotes'].each do |dd|
       tm = DateTime.parse(dd['time_open'])
-      to = TimeObject.time_to_object(tm)
+      ts = tm.to_i
 
       self.data_points.find_or_initialize_by({
-        time_object: to,
+        datetime: tm,
+        timestamp: ts,
         open: dd['quote']['USD']['open'],
         close: dd['quote']['USD']['close'],
         high: dd['quote']['USD']['high'],
