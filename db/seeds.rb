@@ -8,12 +8,19 @@
 
 hsh = {
   url: 'https://coinmarketcap.com/all/views/all/',
-  name: 'CoinMarketCap'
+  name: 'CoinMarketCap',
+  scraper_name: 'CmcScraper'
+}
+DataSource.create(hsh)
+hsh = {
+  url: 'https://financialmodelingprep.com',
+  name: 'Financial Modeling Prep',
+  scraper_name: 'FmpFunctions'
 }
 DataSource.create(hsh)
 
 cds = DataSource.last
-cds.fetch_all_coins # this will populate CryptoCoin s + their historical data (CryptoDataPoint s)
+cds.fetch_all_assets # this will populate CryptoCoin s + their historical data (CryptoDataPoint s)
 
 
 tss = [{

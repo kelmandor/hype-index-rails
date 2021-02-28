@@ -1,6 +1,6 @@
 class DataPoint < ApplicationRecord
   belongs_to :asset
-  belongs_to :time_object
+  # belongs_to :time_object
 
   def by_date
     datetime.to_date.to_s(:db)

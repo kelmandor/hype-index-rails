@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_22_212353) do
+ActiveRecord::Schema.define(version: 2021_02_28_134134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,7 +67,9 @@ ActiveRecord::Schema.define(version: 2021_02_22_212353) do
     t.string "data_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "exchange_id"
     t.index ["data_source_id"], name: "index_assets_on_data_source_id"
+    t.index ["exchange_id"], name: "index_assets_on_exchange_id"
   end
 
   create_table "data_points", force: :cascade do |t|
@@ -90,6 +92,13 @@ ActiveRecord::Schema.define(version: 2021_02_22_212353) do
   create_table "data_sources", force: :cascade do |t|
     t.string "name"
     t.string "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "scraper_name"
+  end
+
+  create_table "exchanges", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

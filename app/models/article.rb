@@ -1,6 +1,6 @@
 class Article < ApplicationRecord
   belongs_to :text_source
-  belongs_to :time_object, optional: true
+  # belongs_to :time_object, optional: true
   has_one_attached :content
   has_one_attached :html
 
