@@ -4,8 +4,10 @@ module FmpFunctions
     save_data(ds, data)
   end
 
-  def self.run_method(ds, api_str)
-    uri = URI.parse("#{ds.url}#{api_str}?apikey=04d26577b3608f4b398bf53f3989ce5c")
+  def self.run_method(ds, api_str, prms = {})
+    prms.merge!(apikey: '04d26577b3608f4b398bf53f3989ce5c')
+    qs = prms.map{|k,v| "#{k}=#{v}"}.join('&')
+    uri = URI.parse("#{ds.url}#{api_str}?#{qs}")
     request = Net::HTTP::Get.new(uri)
     request["Upgrade-Insecure-Requests"] = "1"
 
@@ -42,5 +44,29 @@ module FmpFunctions
 
       coin.save
     end
+  end
+
+  def self.fetch_historical_data(ast)
+    from = '2013-01-01'
+    to = DateTime.now.strftime('%Y-%m-%d')
+    api_str = "/api/v3/historical-price-full/#{ast.symbol}"
+    prms = {from: from, to: to}
+    dps = run_method(ast.data_source, api_str, prms)
+    dps['historical'].each do |dd|
+      tm = DateTime.parse(dd['date'])
+      ts = tm.to_i
+
+      ast.data_points.find_or_initialize_by({
+        datetime: tm,
+        timestamp: ts,
+        open: dd['open'],
+        close: ['close'],
+        high: dd['high'],
+        low: dd['low'],
+        volume: dd['volume']
+      })
+    end
+
+    ast.save
   end
 end
