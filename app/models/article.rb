@@ -54,11 +54,20 @@ class Article < ApplicationRecord
 
   def match_assets(to_save = false)
     txt = self.content.download
-    aa = Asset.all
+    aa = Asset.where.not(name: nil)
 
-    hsh = aa.map{|a| [[a.name, a],[a.symbol, a]]}.flatten(1).to_h
+    # hsh = aa.map{|a| [[a.name, a],[a.symbol, a]]}.flatten(1).to_h
 
-    combined = aa.pluck(:name, :symbol).flatten.map{|a| a.gsub(/[^0-9a-z ]/i, '')}.join('|')
+    names = []
+    aa.each do |a|
+      name_split = a.name.split(' ')
+      names << [name_split[0], a]
+      names << ["#{name_split[0]} #{name_split[1]}", a] if (name_split.size > 1)
+    end
+
+    aa.each{|a| names << [a.symbol, a]}
+    hsh = names.to_h
+    combined = hsh.keys.compact.map{|a| a.gsub(/[^0-9a-z ]/i, '')}.join('|')
     matched = txt.scan(/(#{combined})/).flatten.uniq
     matched.each do |a|
       ass = hsh[a]
