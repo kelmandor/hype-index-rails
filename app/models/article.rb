@@ -9,6 +9,10 @@ class Article < ApplicationRecord
 
   # after_create :scrape_and_match
 
+  def scrape_bg
+    ArticleScrapeWorker.perform_async(self.id)
+  end
+
   def scrape
     begin
       if !self.html.attached? || !self.content.attached?
