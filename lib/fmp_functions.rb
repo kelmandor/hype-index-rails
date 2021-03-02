@@ -26,12 +26,13 @@ module FmpFunctions
   def self.stocks_list(ds)
     api_str = '/api/v3/stock/list'
     stocks = run_method(ds, api_str)
+    ee = Exchange.all.map{|e| [e.name, e]}.to_h
     stocks.map do |row|
-      exchng = Exchange.find_or_create_by(name: row['exchange'])
+      # exchng = Exchange.find_or_create_by(name: row['exchange'])
       hsh = {
         name: row['name'],
         symbol: row['symbol'],
-        exchange: exchng
+        exchange: ee[row['exchange']]
       }
 
       hsh
@@ -39,10 +40,14 @@ module FmpFunctions
   end
 
   def self.save_data(ds, data)
+    asts = Asset.all.pluck(:name, :symbol)
     data.map do |drow|
-      coin = ds.assets.find_or_initialize_by(drow)
+      if !asts.index([drow[:name], drow[:symbol]])
+        # coin = ds.assets.find_or_initialize_by(drow)
+        coin = ds.assets.create(drow)
 
-      coin.save
+        coin.save
+      end
     end
   end
 

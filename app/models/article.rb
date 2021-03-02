@@ -72,7 +72,9 @@ class Article < ApplicationRecord
     matched.each do |a|
       ass = hsh[a]
       puts "ARTICLE #{self.id} MATCHES #{a}"
-      self.assets << ass unless self.assets.include?(ass)
+      if ass
+        self.assets << ass unless self.assets.include?(ass)
+      end
     end
     self.scanned_for_assets = true
     self.save! if to_save
