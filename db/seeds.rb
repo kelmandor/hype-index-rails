@@ -24,9 +24,18 @@ cds.fetch_all_assets # this will populate CryptoCoin s + their historical data (
 
 
 tss = [{
-  name: 'CoinDesk',
-  url: 'https://www.coindesk.com/sitemap_index.xml'
-}]
+    name: 'CoinDesk',
+    url: 'https://www.coindesk.com/sitemap_index.xml'
+  },
+  {
+    name: 'Wsj',
+    url: 'https://www.wsj.com/news/archive/^yyyy^/^mm^/^dd^'
+  },
+  {
+    name: 'MotleyFool',
+    url: 'https://www.fool.com/sitemap/YYYY/MM'
+  }
+]
 
 tss.each do |ts|
   TextSource.find_or_create_by(ts)

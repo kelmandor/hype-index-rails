@@ -6,5 +6,8 @@ production:
   :concurrency: 5
 :queues:
   - critical
+  - [important, 2]
   - default
   - low
+  - active_storage_analysis
+  - active_storage_purge
