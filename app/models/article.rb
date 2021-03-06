@@ -57,19 +57,26 @@ class Article < ApplicationRecord
   end
 
   def match_assets(to_save = false)
+    # puts ""
     txt = self.content.download
-    aa = Asset.where.not(name: nil)
+    aa = Asset.where.not(name: [nil, ""])
 
     # hsh = aa.map{|a| [[a.name, a],[a.symbol, a]]}.flatten(1).to_h
 
     names = []
     aa.each do |a|
       name_split = a.name.split(' ')
-      names << [name_split[0], a]
+      puts 'name_split 0'
+      puts a.symbol
+      puts 'name_split 1'
+      names << [name_split[0], a] if name_split[0].size > 1
       names << ["#{name_split[0]} #{name_split[1]}", a] if (name_split.size > 1)
     end
 
-    aa.each{|a| names << [a.symbol, a]}
+    aa.reject{|w| w.symbol.size < 2}.each do |a|
+      names << [a.symbol, a]
+    end
+
     hsh = names.to_h
     combined = hsh.keys.compact.map{|a| a.gsub(/[^0-9a-z ]/i, '')}.join('|')
     matched = txt.scan(/(#{combined})/).flatten.uniq
@@ -107,7 +114,7 @@ class Article < ApplicationRecord
       self.datetime = tm
       self.timestamp = ts
       self.save! if to_save
-      self.time_object
+      # self.time_object
     rescue
       puts "scrapetime failed article id: #{self.id}"
     end
