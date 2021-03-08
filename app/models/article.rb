@@ -69,13 +69,16 @@ class Article < ApplicationRecord
     puts "scanning the text. Took: #{t4-t0} s"
 
     puts "cycling through matches"
+    asts = []
     matched.each do |a|
       ass = @@asset_hash[a]
       # puts "ARTICLE #{self.id} MATCHES #{a}"
       if ass
-        self.assets << ass unless self.assets.include?(ass)
+        # self.assets << ass unless self.assets.include?(ass)
+        asts << ass # unless self.assets.include?(ass)
       end
     end
+    self.assets = asts
 
     t5=Time.now
     puts "cycling through matches. Took: #{t5-t4} s"
