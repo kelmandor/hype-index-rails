@@ -71,7 +71,7 @@ class Article < ApplicationRecord
     puts "cycling through matches"
     matched.each do |a|
       ass = @@asset_hash[a]
-      puts "ARTICLE #{self.id} MATCHES #{a}"
+      # puts "ARTICLE #{self.id} MATCHES #{a}"
       if ass
         self.assets << ass unless self.assets.include?(ass)
       end
