@@ -8,6 +8,7 @@ class Article < ApplicationRecord
   has_many :assets, through: :article_assets
 
   # after_create :scrape_and_match
+  @@asset_hash ||= Asset.build_hash
 
   def scrape_bg
     ArticleScrapeWorker.perform_async(self.id)
@@ -57,37 +58,29 @@ class Article < ApplicationRecord
   end
 
   def match_assets(to_save = false)
-    # puts ""
+    puts "starting match_assets"
+    t0 = Time.now
     txt = self.content.download
-    aa = Asset.where.not(name: [nil, ""])
 
-    # hsh = aa.map{|a| [[a.name, a],[a.symbol, a]]}.flatten(1).to_h
-
-    names = []
-    aa.each do |a|
-      name_split = a.name.split(' ')
-      puts 'name_split 0'
-      puts a.symbol
-      puts 'name_split 1'
-      names << [name_split[0], a] if name_split[0].size > 1
-      names << ["#{name_split[0]} #{name_split[1]}", a] if (name_split.size > 1)
-    end
-
-    aa.reject{|w| w.symbol.size < 2}.each do |a|
-      names << [a.symbol, a]
-    end
-
-    hsh = names.to_h
-    combined = hsh.keys.compact.map{|a| a.gsub(/[^0-9a-z ]/i, '')}.join('|')
+    combined = @@asset_hash.keys.compact.map{|a| a.gsub(/[^0-9a-z ]/i, '')}.join('|')
+    puts "scanning the text"
     matched = txt.scan(/(#{combined})/).flatten.uniq
+    t4=Time.now
+    puts "scanning the text. Took: #{t4-t0} s"
+
+    puts "cycling through matches"
     matched.each do |a|
-      ass = hsh[a]
+      ass = @@asset_hash[a]
       puts "ARTICLE #{self.id} MATCHES #{a}"
       if ass
         self.assets << ass unless self.assets.include?(ass)
       end
     end
+
+    t5=Time.now
+    puts "cycling through matches. Took: #{t5-t4} s"
     self.scanned_for_assets = true
+    puts "END match_assets Took: #{t5-t0} s"
     self.save! if to_save
   end
 

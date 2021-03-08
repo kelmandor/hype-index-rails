@@ -69,4 +69,37 @@ class Asset < ApplicationRecord
       }
     end
   end
+
+  def self.build_hash
+    t0 = Time.now
+    puts "SQL  all assets"
+    aa = self.where.not(name: [nil, ""])
+    t1=Time.now
+    puts "SQL  all assets. Took: #{t1-t0} s"
+
+    # hsh = aa.map{|a| [[a.name, a],[a.symbol, a]]}.flatten(1).to_h
+
+    puts "putting assets into names array"
+    names = []
+    aa.each do |a|
+      name_split = a.name.split(' ')
+      # puts 'name_split 0'
+      # puts a.symbol
+      # puts 'name_split 1'
+      names << [name_split[0], a] if name_split[0].size > 1
+      names << ["#{name_split[0]} #{name_split[1]}", a] if (name_split.size > 1)
+    end
+
+    t2=Time.now
+    puts "putting assets into names array. Took: #{t2-t1} s"
+
+    puts "putting symbols into names array"
+    aa.reject{|w| w.symbol.size < 2}.each do |a|
+      names << [a.symbol, a]
+    end
+    t3=Time.now
+    puts "putting symbols into names array. Took: #{t3-t2} s"
+
+    hsh = names.to_h
+  end
 end
