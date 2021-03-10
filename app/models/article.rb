@@ -78,7 +78,7 @@ class Article < ApplicationRecord
         asts << ass # unless self.assets.include?(ass)
       end
     end
-    self.assets = asts
+    self.assets = asts.uniq
 
     t5=Time.now
     puts "cycling through matches. Took: #{t5-t4} s"
