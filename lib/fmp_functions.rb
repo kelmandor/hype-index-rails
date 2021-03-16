@@ -100,7 +100,7 @@ module FmpFunctions
     exchanges = Exchange.includes(assets: :data_points).where("name like '%NYSE%' or name like '%Nasdaq%'")
 
     asts = exchanges.map{|ex| ex.assets}.flatten.map{|ast| ast.data_points.size == 0 ? [ast.id, ast] : nil}.compact.to_h
-    list = ArticleAsset.group(:asset_id).count.sort_by{|ast_id, cnt| cnt}.reverse[0..5000]
+    list = ArticleAsset.group(:asset_id).count.sort_by{|ast_id, cnt| cnt}.reverse[5000..10000]
 
     dk = list.inject({}) do |res, data|
       if asts[data[0]]
